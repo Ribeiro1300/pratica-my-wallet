@@ -1,4 +1,5 @@
 import * as financialService from "../services/financialService.js";
+import jwt from "jsonwebtoken";
 
 async function postFinancialEvent(req, res) {
   try {

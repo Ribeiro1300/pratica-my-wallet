@@ -5,7 +5,7 @@ async function newEvent(id, value, type) {
 }
 
 async function getEvents(id) {
-  const events = await financialRepository.getEvent(id);
+  const events = await financialRepository.getEvents(id);
   return events;
 }
 
