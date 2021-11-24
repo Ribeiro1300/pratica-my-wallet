@@ -1,4 +1,4 @@
-import connection from "../database";
+import connection from "../database.js";
 
 async function checkEmailAvailability(email) {
   const existingUserWithGivenEmail = await connection.query(
@@ -17,7 +17,7 @@ async function signup(name, email, hashedPassword) {
 }
 
 async function findByEmail(email) {
-  const user = connection.query(`SELECT * FROM "users" WHERE "email"=$1`, [email]);
+  const user = await connection.query(`SELECT * FROM "users" WHERE "email"=$1`, [email]);
   return user;
 }
 export { checkEmailAvailability, signup, findByEmail };

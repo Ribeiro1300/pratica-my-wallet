@@ -1,4 +1,4 @@
-import * as userService from "../services/userService";
+import * as userService from "../services/userService.js";
 
 async function signup(req, res) {
   try {
@@ -29,11 +29,13 @@ async function signin(req, res) {
       return res.sendStatus(400);
     }
 
-    const token = await userService.authenticate(email, password);
+    const result = await userService.authenticate(email, password);
+    const token = result.token;
+    if (!result.user.rows[0] || !bcrypt.compareSync(password, result.user.rows[0].password)) {
+      return res.sendStatus(401);
+    }
 
-    res.send({
-      token,
-    });
+    res.send({ token });
   } catch (err) {
     console.error(err);
     res.sendStatus(500);

@@ -1,4 +1,4 @@
-import * as financialService from "../services/financialService";
+import * as financialService from "../services/financialService.js";
 
 async function postFinancialEvent(req, res) {
   try {
@@ -57,7 +57,7 @@ async function getFinancialEvent(req, res) {
       return res.sendStatus(401);
     }
 
-    const events = await financialService.getEvents();
+    const events = await financialService.getEvents(user.id);
 
     res.send(events.rows);
   } catch (err) {
@@ -83,10 +83,7 @@ async function sumFinancialEvents(req, res) {
       return res.sendStatus(401);
     }
 
-    const events = await connection.query(
-      `SELECT * FROM "financialEvents" WHERE "userId"=$1 ORDER BY "id" DESC`,
-      [user.id]
-    );
+    const events = await financialService.getEvents(user.id);
 
     const sum = events.rows.reduce(
       (total, event) => (event.type === "INCOME" ? total + event.value : total - event.value),

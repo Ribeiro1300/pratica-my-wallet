@@ -5,4 +5,12 @@ async function newEvent(id, value, type) {
   );
 }
 
-export { newEvent };
+async function getEvent(id) {
+  const events = await connection.query(
+    `SELECT * FROM "financialEvents" WHERE "userId"=$1 ORDER BY "id" DESC`,
+    [id]
+  );
+  return events;
+}
+
+export { newEvent, getEvent };

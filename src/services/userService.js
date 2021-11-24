@@ -1,4 +1,4 @@
-import * as userRepository from "../repositories/userRepository";
+import * as userRepository from "../repositories/userRepository.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -18,16 +18,12 @@ async function signup(name, email, password) {
 async function authenticate(email, password) {
   const user = await userRepository.findByEmail(email);
 
-  if (!user.rows[0] || !bcrypt.compareSync(password, user.rows[0].password)) {
-    return res.sendStatus(401);
-  }
-
   const token = jwt.sign(
     {
       id: user.rows[0].id,
     },
     process.env.JWT_SECRET
   );
-  return token;
+  return { token: token, user: user };
 }
 export { checkEmailAvailability, signup, authenticate };
