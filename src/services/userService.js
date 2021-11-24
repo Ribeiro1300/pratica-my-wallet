@@ -15,7 +15,7 @@ async function signup(name, email, password) {
   const hashedPassword = bcrypt.hashSync(password, 12);
   userRepository.signup(name, email, hashedPassword);
 }
-async function authenticate(email, password) {
+async function authenticate(email) {
   const user = await userRepository.findByEmail(email);
 
   const token = jwt.sign(
@@ -24,6 +24,15 @@ async function authenticate(email, password) {
     },
     process.env.JWT_SECRET
   );
-  return { token: token, user: user };
+  return token;
 }
-export { checkEmailAvailability, signup, authenticate };
+
+async function checkPassword(email, password) {
+  const user = await userRepository.findByEmail(email);
+  if (!user.rows[0] || !bcrypt.compareSync(password, user.rows[0].password)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+export { checkEmailAvailability, signup, authenticate, checkPassword };

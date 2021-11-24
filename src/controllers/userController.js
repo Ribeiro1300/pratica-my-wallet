@@ -29,11 +29,11 @@ async function signin(req, res) {
       return res.sendStatus(400);
     }
 
-    const result = await userService.authenticate(email, password);
-    const token = result.token;
-    if (!result.user.rows[0] || !bcrypt.compareSync(password, result.user.rows[0].password)) {
+    if (!(await userService.checkPassword(email, password))) {
       return res.sendStatus(401);
     }
+
+    const token = await userService.authenticate(email, password);
 
     res.send({ token });
   } catch (err) {
